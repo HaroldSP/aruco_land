@@ -188,9 +188,9 @@ def lander():
                 print("------------------------")
                 print("Vehicle now in LAND mode")
                 print("------------------------")
-				send_land_message(-x_ang_control,-y_ang_control)
+		send_land_message(-x_ang_control,-y_ang_control)
             else:
-				send_land_message(-x_ang_control,-y_ang_control)
+		send_land_message(-x_ang_control,-y_ang_control)
                 pass
             print("X CENTER PIXEL: "+str(x_avg)+" Y CENTER PIXEL: "+str(y_avg))
             print("FOUND COUNT: "+str(found_count)+" NOTFOUND COUNT: "+str(notfound_count))
