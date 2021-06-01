@@ -80,7 +80,7 @@ if __name__=='__main__':
             print(ARMED)
             ####################################
             #while vehicle.armed==True:
-            while ARMED != 20:
+            while ARMED <= 10:
                 AR.lander()
                 time.sleep(1)
                 ARMED = ARMED + 1
