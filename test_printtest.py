@@ -76,15 +76,15 @@ if __name__=='__main__':
         if ready_to_land==1:
             ############4#######################
             print("ENTERING ready_to_land SECTION")
-            ARMED = True
+            ARMED = 0
             print(ARMED)
             ####################################
             #while vehicle.armed==True:
-            while ARMED == True:
+            while ARMED != 10:
                 AR.lander()
-                time.sleep(10)
+                time.sleep(1)
+                ARMED = ARMED + 1
                 print('waited 10 sec to land')
-                ARMED == False
                 print('LANDED')
             end_time=time.time()
             total_time=end_time-start_time
