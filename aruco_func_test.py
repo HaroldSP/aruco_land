@@ -52,9 +52,9 @@ def lander():
         print("First run of lander!!")
         first_run=1
         start_time=time.time()
-    print("does this happens?")
+    #print("does this happens?")
     frame = cap.read()
-    print(frame)
+    #print(frame)
     frame = cv2.resize(frame,(horizontal_res,vertical_res))
     frame_np = np.array(frame)
     gray_img = cv2.cvtColor(frame_np,cv2.COLOR_BGR2GRAY)
@@ -116,9 +116,15 @@ def lander():
             print(x_ang,y_ang)
             print(-x_ang_control,-y_ang_control)
             print("########################################################")
+            cap.release()
+            return None
         else:
             notfound_count=notfound_count+1
             print("FOUND COUNT: "+str(found_count)+" NOTFOUND COUNT: "+str(notfound_count))
+            cap.release()
+            return None
     except Exception as e:
         print('Target likely not found. Error: '+str(e))
         notfound_count=notfound_count+1
+        cap.release()
+        return None
