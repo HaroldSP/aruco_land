@@ -80,10 +80,11 @@ if __name__=='__main__':
             print(ARMED)
             ####################################
             #while vehicle.armed==True:
-            while ARMED != 10:
+            while ARMED != 20:
                 AR.lander()
                 time.sleep(1)
                 ARMED = ARMED + 1
+                print(ARMED)
                 print('waited 10 sec to land')
                 print('LANDED')
             end_time=time.time()
