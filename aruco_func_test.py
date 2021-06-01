@@ -123,6 +123,7 @@ def lander():
             notfound_count=notfound_count+1
             print("FOUND COUNT: "+str(found_count)+" NOTFOUND COUNT: "+str(notfound_count))
             cap.stream.release()
+            frame.cap.stream.release()
             time.sleep(10)
             print("waited 5 sec to release cam")
             return None
