@@ -34,7 +34,6 @@ def lander():
     #####Camera#######
     horizontal_res = 640
     vertical_res = 480
-    cap = WebcamVideoStream(src=0, width=horizontal_res, height=vertical_res).start()
     ##################
     horizontal_fov = 62.2 * (math.pi / 180)  # Pi cam V1: 53.5 V2: 62.2
     vertical_fov = 48.8 * (math.pi / 180)  # Pi cam V1: 41.41 V2: 48.8
@@ -114,12 +113,9 @@ def lander():
             print(x_ang,y_ang)
             print(-x_ang_control,-y_ang_control)
             print("########################################################")
-            cap.release()
         else:
             notfound_count=notfound_count+1
             print("FOUND COUNT: "+str(found_count)+" NOTFOUND COUNT: "+str(notfound_count))
-            cap.release()
     except Exception as e:
         print('Target likely not found. Error: '+str(e))
         notfound_count=notfound_count+1
-        cap.release()
