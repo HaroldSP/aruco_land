@@ -39,6 +39,9 @@ manualArm=False ##If True, arming from RC controller, If False, arming from this
 if __name__=='__main__':
     try:
         vehicle = F.connectMyCopter()
+        while vehicle != vehicle:
+            print("Waiting for vehicle to connect to mavlink.")
+            time.sleep(1)
 
         ##
         ##SETUP PARAMETERS TO ENABLE PRECISION LANDING
