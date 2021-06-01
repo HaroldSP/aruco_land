@@ -122,7 +122,7 @@ def lander():
         else:
             notfound_count=notfound_count+1
             print("FOUND COUNT: "+str(found_count)+" NOTFOUND COUNT: "+str(notfound_count))
-            cap.stream.release()
+            cap.stream.stop()
             time.sleep(5)
             return None
     except Exception as e:
