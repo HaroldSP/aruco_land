@@ -116,6 +116,7 @@ def lander():
             print("########################################################")
         else:
             notfound_count=notfound_count+1
+            print("FOUND COUNT: "+str(found_count)+" NOTFOUND COUNT: "+str(notfound_count))
     except Exception as e:
         print('Target likely not found. Error: '+str(e))
         notfound_count=notfound_count+1
