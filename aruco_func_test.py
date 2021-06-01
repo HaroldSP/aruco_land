@@ -116,15 +116,15 @@ def lander():
             print(x_ang,y_ang)
             print(-x_ang_control,-y_ang_control)
             print("########################################################")
-            cap.stream.stream.release()
+            cap.stream.release()
             return None
         else:
             notfound_count=notfound_count+1
             print("FOUND COUNT: "+str(found_count)+" NOTFOUND COUNT: "+str(notfound_count))
-            cap.stream.stream.release()
+            cap.stream.release()
             return None
     except Exception as e:
         print('Target likely not found. Error: '+str(e))
         notfound_count=notfound_count+1
-        cap.stream.stream.release()
+        cap.stream.release()
         return None
