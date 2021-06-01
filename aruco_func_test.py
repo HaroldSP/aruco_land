@@ -50,7 +50,7 @@ def lander():
         print("First run of lander!!")
         first_run=1
         start_time=time.time()
-
+    print("does this happens?")
     frame = cap.read()
     print(frame)
     frame = cv2.resize(frame,(horizontal_res,vertical_res))
@@ -59,8 +59,8 @@ def lander():
     ids=''
     corners, ids, rejected = aruco.detectMarkers(image=gray_img,dictionary=aruco_dict,parameters=parameters)
 
-    print('FIRST TIME LAND COMMAND - UNCOMMENT LATER!')
-    print('DRONE IS IN THE LAND MODE')
+    print("FIRST TIME LAND COMMAND - UNCOMMENT LATER!")
+    print("DRONE IS IN THE LAND MODE")
     # if vehicle.mode!='LAND':
     #     vehicle.mode=VehicleMode("LAND")
     #     while vehicle.mode!='LAND':
