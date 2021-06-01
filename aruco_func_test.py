@@ -116,19 +116,19 @@ def lander():
             print(x_ang,y_ang)
             print(-x_ang_control,-y_ang_control)
             print("########################################################")
-            cap.release()
+            cap.stream.release()
             time.sleep(5)
             return None
         else:
             notfound_count=notfound_count+1
             print("FOUND COUNT: "+str(found_count)+" NOTFOUND COUNT: "+str(notfound_count))
-            cap.release()
+            cap.stream.release()
             time.sleep(10)
             print("waited 5 sec to release cam")
             return None
     except Exception as e:
         print('Target likely not found. Error: '+str(e))
         notfound_count=notfound_count+1
-        cap.release()
+        cap.stream.release()
         time.sleep(5)
         return None
