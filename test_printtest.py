@@ -76,7 +76,7 @@ if __name__=='__main__':
         if ready_to_land==1:
             ############4#######################
             print("ENTERING ready_to_land SECTION")
-            ARMED == True
+            ARMED = True
             print(ARMED)
             ####################################
             #while vehicle.armed==True:
