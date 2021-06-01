@@ -36,22 +36,22 @@ def lander():
     vertical_res = 480
     cap = WebcamVideoStream(src=0, width=horizontal_res, height=vertical_res).start()
     ##################
-    horizontal_fov = 62.2 * (math.pi / 180 ) ##Pi cam V1: 53.5 V2: 62.2
-    vertical_fov = 48.8 * (math.pi / 180)    ##Pi cam V1: 41.41 V2: 48.8
+    horizontal_fov = 62.2 * (math.pi / 180)  # Pi cam V1: 53.5 V2: 62.2
+    vertical_fov = 48.8 * (math.pi / 180)  # Pi cam V1: 41.41 V2: 48.8
     ##################
-    calib_path="/home/pi/video2calibration/calibrationFiles/"
-    cameraMatrix   = np.loadtxt(calib_path+'cameraMatrix.txt', delimiter=',')
-    cameraDistortion   = np.loadtxt(calib_path+'cameraDistortion.txt', delimiter=',')
+    calib_path = "/home/pi/video2calibration/calibrationFiles/"
+    cameraMatrix = np.loadtxt(calib_path+'cameraMatrix.txt', delimiter=',')
+    cameraDistortion = np.loadtxt(calib_path+'cameraDistortion.txt', delimiter=',')
     ##################
     aruco_dict = aruco.getPredefinedDictionary(aruco.DICT_ARUCO_ORIGINAL)
     parameters = aruco.DetectorParameters_create()
     ##################
 
-
     if first_run==0:
         print("First run of lander!!")
         first_run=1
         start_time=time.time()
+
     frame = cap.read()
     frame = cv2.resize(frame,(horizontal_res,vertical_res))
     frame_np = np.array(frame)
@@ -59,7 +59,7 @@ def lander():
     ids=''
     corners, ids, rejected = aruco.detectMarkers(image=gray_img,dictionary=aruco_dict,parameters=parameters)
 
-    print('FIRST TIME LAND COMMAND')
+    print('FIRST TIME LAND COMMAND - UNCOMMENT LATER!')
     print('DRONE IS IN THE LAND MODE')
     # if vehicle.mode!='LAND':
     #     vehicle.mode=VehicleMode("LAND")
@@ -114,9 +114,12 @@ def lander():
             print(x_ang,y_ang)
             print(-x_ang_control,-y_ang_control)
             print("########################################################")
+            cap.release()
         else:
             notfound_count=notfound_count+1
             print("FOUND COUNT: "+str(found_count)+" NOTFOUND COUNT: "+str(notfound_count))
+            cap.release()
     except Exception as e:
         print('Target likely not found. Error: '+str(e))
         notfound_count=notfound_count+1
+        cap.release()
