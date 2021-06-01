@@ -52,6 +52,7 @@ def lander():
         start_time=time.time()
 
     frame = cap.read()
+    print(frame)
     frame = cv2.resize(frame,(horizontal_res,vertical_res))
     frame_np = np.array(frame)
     gray_img = cv2.cvtColor(frame_np,cv2.COLOR_BGR2GRAY)
