@@ -5,9 +5,9 @@
 #PRINT DEBUG VERSION
 
 ##########DEPENDENCIES################
-#import aruco_func # my custom imports
-import aruco_func_test # my custom imports
-import functions # my custom imports
+#import aruco_func as AR           # my custom imports
+import aruco_func_test as AR       # my custom imports
+import functions as F              # my custom imports
 
 import argparse
 import cv2
@@ -38,7 +38,7 @@ manualArm=False ##If True, arming from RC controller, If False, arming from this
 
 if __name__=='__main__':
     try:
-        vehicle = connectMyCopter()
+        vehicle = F.connectMyCopter()
 
         ##
         ##SETUP PARAMETERS TO ENABLE PRECISION LANDING
@@ -53,12 +53,12 @@ if __name__=='__main__':
         #################
 
         if script_mode ==1:
-            #arm_and_takeoff(takeoff_height)
+            #F.arm_and_takeoff(takeoff_height)
             ############2#######################
             print("FLYING UP!!", takeoff_height)
             ####################################
             print(str(time.time()))
-            #send_local_ned_velocity(velocity,velocity,0) ##Offset drone from target
+            #F.send_local_ned_velocity(velocity,velocity,0) ##Offset drone from target
             time.sleep(1)
             ready_to_land=1
             ############3#######################
@@ -77,7 +77,7 @@ if __name__=='__main__':
             ####################################
             #while vehicle.armed==True:
             while ARMED == True:
-                lander()
+                AR.lander()
                 time.sleep(10)
                 print('waited 10 sec to land')
                 ARMED == False

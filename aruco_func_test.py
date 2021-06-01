@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 ##########DEPENDENCIES################
 import argparse
 import cv2
