@@ -59,9 +59,9 @@ vertical_res = 480
 horizontal_fov = 62.2 * (math.pi / 180)  # Pi cam V1: 53.5 V2: 62.2
 vertical_fov = 48.8 * (math.pi / 180)  # Pi cam V1: 41.41 V2: 48.8
 ##################
-# calib_path = "/home/pi/video2calibration/calibrationFiles/"
-# cameraMatrix = np.loadtxt(calib_path+'cameraMatrix.txt', delimiter=',')
-# cameraDistortion = np.loadtxt(calib_path+'cameraDistortion.txt', delimiter=',')
+calib_path = "/home/pi/video2calibration/calibrationFiles/"
+cameraMatrix = np.loadtxt(calib_path+'cameraMatrix.txt', delimiter=',')
+cameraDistortion = np.loadtxt(calib_path+'cameraDistortion.txt', delimiter=',')
 ##################
 aruco_dict = aruco.getPredefinedDictionary(aruco.DICT_ARUCO_ORIGINAL)
 parameters = aruco.DetectorParameters_create()
