@@ -5,6 +5,8 @@
 #PRINT DEBUG VERSION
 #WORKING ON RASPBERRY AND NAVIO2 !!!
 
+#checking .gitignore 
+
 ##########DEPENDENCIES################
 #import aruco_func as AR           # my custom imports
 #import aruco_func_test as AR       # my custom imports
