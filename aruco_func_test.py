@@ -20,7 +20,7 @@ from simple_pid import PID
 #########FUNCTIONS#################
 
 def lander():
-
+    global first_run, notfound_count, found_count, marker_size, start_time
     global p, i, d, pid, marker_size
 
     ##Counters and script triggers
