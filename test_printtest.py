@@ -156,22 +156,23 @@ def lander():
 
 ##########MAIN##############
 try:
-    # vehicle = F.connectMyCopter()
-    # while vehicle != vehicle:
-    #     print("Waiting for vehicle to connect to mavlink.")
-    #     time.sleep(1)
+    vehicle = F.connectMyCopter()
+    while vehicle != vehicle:
+        print("Waiting for vehicle to connect to mavlink.")
+        time.sleep(1)
 
-    # ##
-    # ##SETUP PARAMETERS TO ENABLE PRECISION LANDING
-    # ##
-    # vehicle.parameters['PLND_ENABLED'] = 1
-    # vehicle.parameters['PLND_TYPE'] = 1 ##1 for companion computer
-    # vehicle.parameters['PLND_EST_TYPE'] = 0 ##0 for raw sensor, 1 for kalman filter pos estimation
-    # vehicle.parameters['LAND_SPEED'] = 20 ##Descent speed of 20cm/s
+    ##
+    ##SETUP PARAMETERS TO ENABLE PRECISION LANDING
+    ##
+    vehicle.parameters['PLND_ENABLED'] = 1
+    vehicle.parameters['PLND_TYPE'] = 1 ##1 for companion computer
+    vehicle.parameters['PLND_EST_TYPE'] = 0 ##0 for raw sensor, 1 for kalman filter pos estimation
+    vehicle.parameters['LAND_SPEED'] = 20 ##Descent speed of 20cm/s
 
-    # #DEBUG SECTION 1#
-    # print(vehicle.parameters['LAND_SPEED'])
-    # #################
+    #DEBUG SECTION 1#
+    print("this is land speed", vehicle.parameters['LAND_SPEED'])
+    print(vehicle.parameters['LAND_SPEED'])
+    #################
 
     if script_mode ==1:
         #F.arm_and_takeoff(takeoff_height)
@@ -197,7 +198,7 @@ try:
         ############4#######################
         print("ENTERING ready_to_land SECTION")
         ARMED = 0
-        print(ARMED)
+        print("ARMED:", ARMED)
         ####################################
         #while vehicle.armed==True:
         #while ARMED != 10:
@@ -205,30 +206,45 @@ try:
             lander()
             time.sleep(1)
             ARMED = ARMED + 1
-            print(ARMED)
+            print("ARMED:", ARMED)
             #frame = vs.read()
             #cv2.imshow('webcam', frame)
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                vs.stop()
-                break
+            # if cv2.waitKey(1) & 0xFF == ord('q'):
+            #     vs.stop()
+            #     break
             #vs.stop()
             #cv2.destroyAllWindows()
 
-        print('waited 10 sec to land')
-        print('LANDED')
-        end_time = time.time()
-        total_time=end_time-start_time
-        total_time=abs(int(total_time))
+        # print('waited 10 sec to land')
+        # print('LANDED')
+        # end_time = time.time()
+        # total_time=end_time-start_time
+        # total_time=abs(int(total_time))
 
-        total_count=found_count+notfound_count
-        freq_lander=total_count/total_time
-        print("Total iterations: "+str(total_count))
-        print("Total seconds: "+str(total_time))
-        print("------------------")
-        print("lander function had frequency of: "+str(freq_lander))
-        print("------------------")
-        print("Vehicle has landed")
-        print("------------------")
+        # total_count=found_count+notfound_count
+        # freq_lander=total_count/total_time
+        # print("Total iterations: "+str(total_count))
+        # print("Total seconds: "+str(total_time))
+        # print("------------------")
+        # print("lander function had frequency of: "+str(freq_lander))
+        # print("------------------")
+        # print("Vehicle has landed")
+        # print("------------------")
 except KeyboardInterrupt:
     vs.stop()
+    print("THIS IS THE END, LANDED")
+    end_time = time.time()
+    total_time=end_time-start_time
+    total_time=abs(int(total_time))
+
+    total_count=found_count+notfound_count
+    freq_lander=total_count/total_time
+    print("Total iterations: "+str(total_count))
+    print("Total seconds: "+str(total_time))
+    print("------------------")
+    print("lander function had frequency of: "+str(freq_lander))
+    print("------------------")
+    print("Vehicle has landed")
+    print("------------------")
+
     pass
