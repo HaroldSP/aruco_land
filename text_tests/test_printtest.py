@@ -7,7 +7,7 @@
 ##########DEPENDENCIES################
 import functions as F              # my custom imports
 import multicam as M               # my custom imports
-import sys                         # this import is for passing arguments to a python script
+#import sys                         # this import is for passing arguments to a python script
 
 import argparse
 import cv2
@@ -29,7 +29,7 @@ from simple_pid import PID
 
 #######these are for passing args to a py script########################
 
-firstarg = int(sys.argv[1])
+#firstarg = int(sys.argv[1])
 #secondarg = sys.argv[2]
 # thirdarg = sys.argv[3]
 
@@ -63,14 +63,12 @@ horizontal_fov = 62.2 * (math.pi / 180)  # Pi cam V1: 53.5 V2: 62.2
 vertical_fov = 48.8 * (math.pi / 180)  # Pi cam V1: 41.41 V2: 48.8
 ##################
 
-if firstarg == 1:
-    print('1: testing on Pi+Navio2')
-    calib_path = "/home/pi/video2calibration/calibrationFiles/"
-    cameraMatrix = np.loadtxt(calib_path+'cameraMatrix.txt', delimiter=',')
-    cameraDistortion = np.loadtxt(calib_path+'cameraDistortion.txt', delimiter=',')
-else:
-    print('2: testing on PC')
-##################
+#######comment that section 1 to run on PC#########
+calib_path = "/home/pi/video2calibration/calibrationFiles/"
+cameraMatrix = np.loadtxt(calib_path+'cameraMatrix.txt', delimiter=',')
+cameraDistortion = np.loadtxt(calib_path+'cameraDistortion.txt', delimiter=',')
+##################11111111111111111############
+
 aruco_dict = aruco.getPredefinedDictionary(aruco.DICT_ARUCO_ORIGINAL)
 parameters = aruco.DetectorParameters_create()
 ##################
@@ -160,20 +158,22 @@ def lander():
 if __name__ == '__main__':
 
     try:
-        if firstarg == 1:
+        ##########comment that section 2 to run on PC#########
 
-            vehicle = F.connectMyCopter()
-            while vehicle != vehicle:
-                print("Waiting for vehicle to connect to mavlink.")
-                time.sleep(1)
-            print("Successfully connected to vehicle")
-            #
-            #SETUP PARAMETERS TO ENABLE PRECISION LANDING
-            #
-            vehicle.parameters['PLND_ENABLED'] = 1
-            vehicle.parameters['PLND_TYPE'] = 1 ##1 for companion computer
-            vehicle.parameters['PLND_EST_TYPE'] = 0 ##0 for raw sensor, 1 for kalman filter pos estimation
-            vehicle.parameters['LAND_SPEED'] = 20 ##Descent speed of 20cm/s
+        vehicle = F.connectMyCopter()
+        while vehicle != vehicle:
+            print("Waiting for vehicle to connect to mavlink.")
+            time.sleep(1)
+        print("Successfully connected to vehicle")
+        #
+        #SETUP PARAMETERS TO ENABLE PRECISION LANDING
+        #
+        vehicle.parameters['PLND_ENABLED'] = 1
+        vehicle.parameters['PLND_TYPE'] = 1 ##1 for companion computer
+        vehicle.parameters['PLND_EST_TYPE'] = 0 ##0 for raw sensor, 1 for kalman filter pos estimation
+        vehicle.parameters['LAND_SPEED'] = 20 ##Descent speed of 20cm/s
+
+        ######################22222222222222222##############
 
         if script_mode ==1:
             #F.arm_and_takeoff(takeoff_height)
