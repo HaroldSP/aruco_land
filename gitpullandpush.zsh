@@ -6,7 +6,7 @@ git pull
 
 git add .
 #git commit -m "$NOW"
-git commit -m "$1"
+git commit -m "$1 at $NOW"
 git push -u origin master 
 
 #делаем принудительный коммит в основной репо на гитхабе
