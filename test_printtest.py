@@ -3,6 +3,7 @@
 
 #THIS IS A NEW TEST SCRIPT RUNNING SEVERAL FUNCSIONS FROM MODULES
 #PRINT DEBUG VERSION
+#WORKING ON RASPBERRY AND NAVIO2 !!!
 
 ##########DEPENDENCIES################
 #import aruco_func as AR           # my custom imports
