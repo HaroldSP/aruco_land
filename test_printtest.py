@@ -6,7 +6,7 @@
 #WORKING ON RASPBERRY AND NAVIO2 !!!
 
 #checking .gitignore 
-#checking passing commit name as arg to a bash script
+#checking passing commit name as arg to a bash script!
 
 ##########DEPENDENCIES################
 #import aruco_func as AR           # my custom imports
