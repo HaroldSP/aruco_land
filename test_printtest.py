@@ -20,7 +20,7 @@ import socket
 import time
 
 from dronekit import connect, VehicleMode,LocationGlobalRelative,APIException
-from imutils.video import WebcamVideoStream
+from imutils.video import WebcamVideoStreamparallel lines detection
 from pymavlink import mavutil
 from simple_pid import PID
 
