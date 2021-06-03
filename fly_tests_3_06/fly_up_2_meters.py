@@ -1,13 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#THIS IS A NEW TEST SCRIPT RUNNING SEVERAL FUNCSIONS FROM MODULES
-#PRINT DEBUG VERSION
+#THIS IS A FLY SCRIPT OF PL, READY TO BE TESTED IN FIELD
 
 ##########DEPENDENCIES################
 import functions as F              # my custom imports
 import multicam as M               # my custom imports
-#import sys                         # this import is for passing arguments to a python script
 
 import argparse
 import cv2
@@ -28,11 +26,6 @@ from simple_pid import PID
 #######VARIABLES####################
 
 #######these are for passing args to a py script########################
-
-#firstarg = int(sys.argv[1])
-#secondarg = sys.argv[2]
-# thirdarg = sys.argv[3]
-
 
 id_to_find = 72 ##Aruco
 marker_size = 20 #cm
@@ -63,11 +56,11 @@ horizontal_fov = 62.2 * (math.pi / 180)  # Pi cam V1: 53.5 V2: 62.2
 vertical_fov = 48.8 * (math.pi / 180)  # Pi cam V1: 41.41 V2: 48.8
 ##################
 
-#######comment that section 1 to run on PC#########
+##################
 calib_path = "/home/pi/video2calibration/calibrationFiles/"
 cameraMatrix = np.loadtxt(calib_path+'cameraMatrix.txt', delimiter=',')
 cameraDistortion = np.loadtxt(calib_path+'cameraDistortion.txt', delimiter=',')
-##################11111111111111111############
+##################
 
 aruco_dict = aruco.getPredefinedDictionary(aruco.DICT_ARUCO_ORIGINAL)
 parameters = aruco.DetectorParameters_create()
@@ -93,13 +86,12 @@ def lander():
     ids = ''
     corners, ids, rejected = aruco.detectMarkers(image=gray_img, dictionary=aruco_dict, parameters=parameters)
 
-    print("FIRST TIME LAND COMMAND - UNCOMMENT LATER!")
     print("DRONE IS IN THE LAND MODE - checking in loop")
-    # if vehicle.mode!='LAND':
-    #     vehicle.mode=VehicleMode("LAND")
-    #     while vehicle.mode!='LAND':
-    #         print('WAITING FOR DRONE TO ENTER LAND MODE')
-    #         time.sleep(1)
+    if vehicle.mode!='LAND':
+        vehicle.mode=VehicleMode("LAND")
+        while vehicle.mode!='LAND':
+            print('WAITING FOR DRONE TO ENTER LAND MODE')
+            time.sleep(1)
     try:
         print('started TRY block')
         if ids is not None and ids[0] == id_to_find:
@@ -136,8 +128,13 @@ def lander():
             px, ix, dx = pid_x.components
             py, iy, dy = pid_y.components
 
-            #send_land_message(x_ang,y_ang)
-            #send_land_message(-x_ang_control,-y_ang_control)
+            #PL COMTROL STUFF WITHOUT PID
+            #F.send_land_message(x_ang,y_ang)
+
+            #THIS IS THE MOST IMPORTANT THING HERE - PL WITH PID CONTROL
+            F.send_land_message(-x_ang_control,-y_ang_control) 
+            ############################################################
+
             print("X CENTER PIXEL: "+str(x_avg)+" Y CENTER PIXEL: "+str(y_avg))
             print("FOUND COUNT: "+str(found_count) + " NOTFOUND COUNT: "+str(notfound_count))
             print("MARKER POSITION: x=" + x+" y= "+y+" z="+z)
@@ -158,14 +155,15 @@ def lander():
 if __name__ == '__main__':
 
     try:
-        ##########comment that section 2 to run on PC#########
+        ################Connecting to the drone##############
 
         vehicle = F.connectMyCopter()
         while vehicle != vehicle:
             print("Waiting for vehicle to connect to mavlink.")
             time.sleep(1)
         print("Successfully connected to vehicle")
-        #
+        ######################################################
+
         #SETUP PARAMETERS TO ENABLE PRECISION LANDING
         #
         vehicle.parameters['PLND_ENABLED'] = 1
@@ -173,10 +171,10 @@ if __name__ == '__main__':
         vehicle.parameters['PLND_EST_TYPE'] = 0 ##0 for raw sensor, 1 for kalman filter pos estimation
         vehicle.parameters['LAND_SPEED'] = 20 ##Descent speed of 20cm/s
 
-        ######################22222222222222222##############
+        #######################################################
 
         if script_mode ==1:
-            #F.arm_and_takeoff(takeoff_height)
+            F.arm_and_takeoff(takeoff_height)
             ############2#######################
             print("FLYING UP!!", takeoff_height)
             ####################################
@@ -193,49 +191,49 @@ if __name__ == '__main__':
             ready_to_land=1
 
         if ready_to_land==1:
-            ############4#######################
-            print("ENTERING ready_to_land SECTION in MAIN")
-            ARMED = 0
-            print("ARMED:", ARMED)
+
             ####################################
-            #while vehicle.armed==True:
-            #while ARMED != 10:
-            while True:
+            print("ENTERING ready_to_land SECTION in MAIN")
+            ####################################
+            
+            while vehicle.armed==True:
                 lander()
-                time.sleep(1)
-                ARMED = ARMED + 1
-                print("ARMED:", ARMED)
-                #break that loop by ctrl+C
+                #time.sleep(1)
+                print("ARMED:", vehicle.armed) #might need to comment out later
 
-            # print('waited 10 sec to land')
-            # print('LANDED')
-            # end_time = time.time()
-            # total_time=end_time-start_time
-            # total_time=abs(int(total_time))
+            print('LANDED')
+            vs.stop()
+            end_time = time.time()
+            total_time=end_time-start_time
+            total_time=abs(int(total_time))
 
-            # total_count=found_count+notfound_count
-            # freq_lander=total_count/total_time
-            # print("Total iterations: "+str(total_count))
-            # print("Total seconds: "+str(total_time))
-            # print("------------------")
-            # print("lander function had frequency of: "+str(freq_lander))
-            # print("------------------")
-            # print("Vehicle has landed")
-            # print("------------------")
-    except KeyboardInterrupt:
+            total_count=found_count+notfound_count
+            freq_lander=total_count/total_time
+            print("Total iterations: "+str(total_count))
+            print("Total seconds: "+str(total_time))
+            print("------------------")
+            print("lander function had frequency of: "+str(freq_lander))
+            print("------------------")
+            print("Vehicle has landed")
+            print("------------------")
+    
+    except Exception as e:
+        
         vs.stop()
-        print("THIS IS THE END, LANDED")
-        end_time = time.time()
-        total_time=end_time-start_time
-        #total_time=abs(int(total_time))
+        print("THIS IS THE END, LANDED or whatever")
+        print("THIS WAS BY AN EXCEPTION, closing VS")
+        print('This is an Error: '+str(e))
+        # end_time = time.time()
+        # total_time=end_time-start_time
+        # #total_time=abs(int(total_time))
 
-        total_count=found_count+notfound_count
-        freq_lander=abs(float(total_count/total_time))
-        print("Total iterations: "+str(total_count))
-        print("Total seconds: "+str(total_time))
-        print("------------------")
-        print("lander function had frequency of: "+str(freq_lander))
-        print("------------------")
-        print("Vehicle has landed")
-        print("------------------")
+        # total_count=found_count+notfound_count
+        # freq_lander=abs(float(total_count/total_time))
+        # print("Total iterations: "+str(total_count))
+        # print("Total seconds: "+str(total_time))
+        # print("------------------")
+        # print("lander function had frequency of: "+str(freq_lander))
+        # print("------------------")
+        # print("Vehicle has landed")
+        # print("------------------")
         pass
