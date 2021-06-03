@@ -169,7 +169,7 @@ if __name__ == '__main__':
         vehicle.parameters['PLND_ENABLED'] = 1
         vehicle.parameters['PLND_TYPE'] = 1 ##1 for companion computer
         vehicle.parameters['PLND_EST_TYPE'] = 0 ##0 for raw sensor, 1 for kalman filter pos estimation
-        vehicle.parameters['LAND_SPEED'] = 20 ##Descent speed of 20cm/s
+        vehicle.parameters['LAND_SPEED'] = 15 ##Descent speed of 15cm/s
 
         #######################################################
 
