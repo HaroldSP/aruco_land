@@ -4,8 +4,11 @@
 #THIS IS A FLY SCRIPT OF PL, READY TO BE TESTED IN FIELD
 
 ##########DEPENDENCIES################
-import functions as F              # my custom imports
-import multicam as M               # my custom imports
+#from functions import *              # my custom imports
+#import multicam as M               # my custom imports
+from threading import Thread, Lock
+
+
 
 import argparse
 import cv2
@@ -30,7 +33,7 @@ from simple_pid import PID
 id_to_find = 72 ##Aruco
 marker_size = 20 #cm
 
-takeoff_height = 4
+takeoff_height = 1
 velocity = .25
 
 script_mode = 1  # 1 for arm and takeoff, 2 for manual LOITER to GUIDED land
@@ -67,9 +70,119 @@ parameters = aruco.DetectorParameters_create()
 ##################
 
 #starting videostream here, before the loop
-vs = M.WebcamVideoStream().start()
+vs = WebcamVideoStream()
+vs.stop()
+vs.start()
 
 #########LANDER FUNCTION#################
+class WebcamVideoStream:
+    def __init__(self, src=0, width=640, height=480):
+        self.stream = cv2.VideoCapture(src)
+        self.stream.set(cv2.CAP_PROP_FRAME_WIDTH, width)
+        self.stream.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
+        (self.grabbed, self.frame) = self.stream.read()
+        self.started = False
+        self.read_lock = Lock()
+
+    def start(self):
+        if self.started:
+            print "already started!!"
+            return None
+        self.started = True
+        self.thread = Thread(target=self.update, args=())
+        self.thread.start()
+        return self
+
+    def update(self):
+        while self.started:
+            (grabbed, frame) = self.stream.read()
+            self.read_lock.acquire()
+            self.grabbed, self.frame = grabbed, frame
+            self.read_lock.release()
+
+    def read(self):
+        self.read_lock.acquire()
+        frame = self.frame.copy()
+        self.read_lock.release()
+        return frame
+
+    def stop(self):
+        self.started = False
+        self.thread.join()
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.stream.release()
+
+def connectMyCopter():
+
+    parser = argparse.ArgumentParser(description='commands')
+    parser.add_argument('--connect')
+    args = parser.parse_args()
+    connection_string = args.connect
+    if not connection_string:
+        connection_string='127.0.0.1:14550'
+    vehicle = connect(connection_string,wait_ready=True)
+    return vehicle
+
+def arm_and_takeoff(targetHeight):
+    while vehicle.is_armable!=True:
+        print("Waiting for vehicle to become armable.")
+        time.sleep(1)
+    print("Vehicle is now armable")
+    vehicle.mode = VehicleMode("GUIDED")
+    while vehicle.mode!='GUIDED':
+        print("Waiting for drone to enter GUIDED flight mode")
+        time.sleep(1)
+    print("Vehicle now in GUIDED MODE. Have fun!!")
+
+    if manualArm==False:
+        vehicle.armed = True
+        while vehicle.armed==False:
+            print("Waiting for vehicle to become armed.")
+            time.sleep(1)
+    else:
+        if vehicle.armed == False:
+            print("Exiting script. manualArm set to True but vehicle not armed.")
+            print("Set manualArm to True if desiring script to arm the drone.")
+            return None
+    print("Look out! Props are spinning!!")
+
+    vehicle.simple_takeoff(targetHeight) ##meters
+
+    while True:
+        print("Current Altitude: %d"%vehicle.location.global_relative_frame.alt)
+        if vehicle.location.global_relative_frame.alt>=.95*targetHeight:
+            break
+        time.sleep(1)
+    print("Target altitude reached!!")
+    return None
+
+def send_local_ned_velocity(vx, vy, vz):
+    msg = vehicle.message_factory.set_position_target_local_ned_encode(
+        0,
+        0, 0,
+        mavutil.mavlink.MAV_FRAME_BODY_OFFSET_NED,
+        0b0000111111000111,
+        0, 0, 0,
+        vx, vy, vz,
+        0, 0, 0,
+        0, 0)
+    vehicle.send_mavlink(msg)
+    vehicle.flush()
+
+def send_land_message(x,y):
+    msg = vehicle.message_factory.landing_target_encode(
+        0,
+        0,
+        mavutil.mavlink.MAV_FRAME_BODY_OFFSET_NED,
+        x,
+        y,
+        0,
+        0,
+        0,)
+    vehicle.send_mavlink(msg)
+    vehicle.flush()
+
 
 def lander():
     global first_run, notfound_count, found_count, marker_size, start_time, vs
@@ -132,7 +245,7 @@ def lander():
             #F.send_land_message(x_ang,y_ang)
 
             #THIS IS THE MOST IMPORTANT THING HERE - PL WITH PID CONTROL
-            F.send_land_message(-x_ang_control,-y_ang_control) 
+            send_land_message(-x_ang_control,-y_ang_control)
             ############################################################
 
             print("X CENTER PIXEL: "+str(x_avg)+" Y CENTER PIXEL: "+str(y_avg))
@@ -157,7 +270,7 @@ if __name__ == '__main__':
     try:
         ################Connecting to the drone##############
 
-        vehicle = F.connectMyCopter()
+        vehicle = connectMyCopter()
         while vehicle != vehicle:
             print("Waiting for vehicle to connect to mavlink.")
             time.sleep(1)
@@ -174,7 +287,7 @@ if __name__ == '__main__':
         #######################################################
 
         if script_mode ==1:
-            F.arm_and_takeoff(takeoff_height)
+            arm_and_takeoff(takeoff_height)
             ############2#######################
             print("FLYING UP!!", takeoff_height)
             ####################################
@@ -195,7 +308,7 @@ if __name__ == '__main__':
             ####################################
             print("ENTERING ready_to_land SECTION in MAIN")
             ####################################
-            
+
             while vehicle.armed==True:
                 lander()
                 #time.sleep(1)
@@ -216,9 +329,9 @@ if __name__ == '__main__':
             print("------------------")
             print("Vehicle has landed")
             print("------------------")
-    
+
     except Exception as e:
-        
+
         vs.stop()
         print("THIS IS THE END, LANDED or whatever")
         print("THIS WAS BY AN EXCEPTION, closing VS")
