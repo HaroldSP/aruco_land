@@ -93,6 +93,9 @@ def lander():
     ids = ''
     corners, ids, rejected = aruco.detectMarkers(image=gray_img, dictionary=aruco_dict, parameters=parameters)
 
+    print("corners", corners)
+    print("ids", ids)
+    print("rejected", rejected)
     print("FIRST TIME LAND COMMAND - UNCOMMENT LATER!")
     print("DRONE IS IN THE LAND MODE - checking in loop")
     # if vehicle.mode!='LAND':
