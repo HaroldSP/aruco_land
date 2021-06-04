@@ -21,7 +21,7 @@ from simple_pid import PID
 ##Aruco
 id_to_find = 72
 marker_size = 20 #cm
-takeoff_height = 4
+takeoff_height = 3
 velocity = .25
 
 aruco_dict = aruco.getPredefinedDictionary(aruco.DICT_ARUCO_ORIGINAL)
@@ -220,7 +220,7 @@ vehicle = connectMyCopter()
 vehicle.parameters['PLND_ENABLED'] = 1
 vehicle.parameters['PLND_TYPE'] = 1 ##1 for companion computer
 vehicle.parameters['PLND_EST_TYPE'] = 0 ##0 for raw sensor, 1 for kalman filter pos estimation
-vehicle.parameters['LAND_SPEED'] = 20 ##Descent speed of 20cm/s
+vehicle.parameters['LAND_SPEED'] = 15 ##Descent speed of 15 cm/s
 
 if script_mode ==1:
     arm_and_takeoff(takeoff_height)
